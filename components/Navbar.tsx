@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { usePlan } from "@/components/PlanContext";
+   import { usePlan } from "@/components/PlanContext";
 
 export default function Navbar() {
   const pathname = usePathname();
