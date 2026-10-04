@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 type Workout = {
-  id: number;
+    id: number;
   name: string;
   image: string;
   muscleGroups: string[];

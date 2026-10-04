@@ -345,9 +345,9 @@ export default function PlanPage() {
                       ◷ {Number(workout.duration || 0)} min
                     </span>
 
-                    <span>
+                      <span>
                       🔥 {Number(workout.caloriesBurned || 0)} kcal
-                    </span>
+                       </span>
 
                     <span>
                       ★ {Number(workout.rating || 0)}
