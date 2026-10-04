@@ -9,7 +9,7 @@ export default function Footer() {
         <Link href="/" className="flex items-center gap-2">
           <div className="w-5 h-5 rounded-md bg-[#d4ff00] flex items-center justify-center">
             <span className="text-black font-bold text-xs">
-              H
+              
             </span>
           </div>
 

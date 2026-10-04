@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
-import { usePlan } from "@/components/PlanContext";
 
 type Workout = {
   id: number;
@@ -16,20 +15,68 @@ type Workout = {
   sets: number;
   reps: string;
   rating: number;
-  description: string;
-  instructions: string[];
 };
 
-export default function PlanPage() {
-  const { planCount } = usePlan();
-
+export default function SavedPage() {
   const [workouts, setWorkouts] = useState<Workout[]>([]);
-  const [planIds, setPlanIds] = useState<number[]>([]);
+  const [savedIds, setSavedIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
-  const [sortBy, setSortBy] = useState("default");
 
   // =========================
-  // GET WORKOUTS FROM API
+  // GET SAVED IDS
+  // =========================
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("fitlog-saved");
+
+      if (!saved) {
+        setSavedIds([]);
+        return;
+      }
+
+      const parsed = JSON.parse(saved);
+
+      if (Array.isArray(parsed)) {
+        /*
+          Supports both:
+          [1, 2, 3]
+
+          and old saved workout objects:
+          [{ id: 1, name: "..." }]
+        */
+
+        const ids = parsed
+          .map((item) => {
+            if (typeof item === "number") {
+              return item;
+            }
+
+            if (typeof item === "string") {
+              return Number(item);
+            }
+
+            if (
+              typeof item === "object" &&
+              item !== null &&
+              "id" in item
+            ) {
+              return Number(item.id);
+            }
+
+            return NaN;
+          })
+          .filter((id) => !Number.isNaN(id));
+
+        setSavedIds(ids);
+      }
+    } catch (error) {
+      console.error("Saved data error:", error);
+      setSavedIds([]);
+    }
+  }, []);
+
+  // =========================
+  // GET ALL WORKOUTS FROM API
   // =========================
   useEffect(() => {
     async function getWorkouts() {
@@ -56,69 +103,18 @@ export default function PlanPage() {
   }, []);
 
   // =========================
-  // GET PLAN IDS FROM LOCAL STORAGE
+  // GET ONLY SAVED WORKOUTS
   // =========================
-  useEffect(() => {
-    const savedPlan = localStorage.getItem("fitlog-plan");
-
-    if (!savedPlan) {
-      setPlanIds([]);
-      return;
-    }
-
-    try {
-      const ids = JSON.parse(savedPlan);
-
-      if (Array.isArray(ids)) {
-        // Make sure every ID is a number
-        const numericIds = ids
-          .map((id) => Number(id))
-          .filter((id) => !Number.isNaN(id));
-
-        setPlanIds(numericIds);
-      } else {
-        setPlanIds([]);
-      }
-    } catch (error) {
-      console.error("Plan data error:", error);
-      setPlanIds([]);
-    }
-  }, [planCount]);
-
-  // =========================
-  // FILTER PLAN WORKOUTS
-  // =========================
-  const planWorkouts = useMemo(() => {
-    let result = workouts.filter((workout) =>
-      planIds.includes(Number(workout.id))
+  const savedWorkouts = useMemo(() => {
+    return workouts.filter((workout) =>
+      savedIds.includes(Number(workout.id))
     );
-
-    if (sortBy === "duration") {
-      result = [...result].sort(
-        (a, b) => Number(a.duration) - Number(b.duration)
-      );
-    }
-
-    if (sortBy === "calories") {
-      result = [...result].sort(
-        (a, b) =>
-          Number(b.caloriesBurned) - Number(a.caloriesBurned)
-      );
-    }
-
-    if (sortBy === "rating") {
-      result = [...result].sort(
-        (a, b) => Number(b.rating) - Number(a.rating)
-      );
-    }
-
-    return result;
-  }, [workouts, planIds, sortBy]);
+  }, [workouts, savedIds]);
 
   // =========================
   // TOTAL MINUTES
   // =========================
-  const totalMinutes = planWorkouts.reduce(
+  const totalMinutes = savedWorkouts.reduce(
     (total, workout) =>
       total + Number(workout.duration || 0),
     0
@@ -127,7 +123,7 @@ export default function PlanPage() {
   // =========================
   // TOTAL CALORIES
   // =========================
-  const totalCalories = planWorkouts.reduce(
+  const totalCalories = savedWorkouts.reduce(
     (total, workout) =>
       total + Number(workout.caloriesBurned || 0),
     0
@@ -138,36 +134,40 @@ export default function PlanPage() {
   // =========================
   if (loading) {
     return (
-      <main className="min-h-screen bg-[#0b0b0b] px-6 py-12 text-white sm:px-10">
+      <main className="min-h-screen bg-[#0b0b0b] px-6 py-10 text-white sm:px-10">
         <div className="mx-auto max-w-6xl">
+
           <p className="text-center text-white/60">
-            Loading your plan...
+            Loading saved workouts...
           </p>
+
         </div>
       </main>
     );
   }
 
-  // =========================
-  // PAGE
-  // =========================
   return (
     <main className="min-h-screen bg-[#0b0b0b] px-6 py-10 text-white sm:px-10">
+
       <div className="mx-auto max-w-6xl">
 
-        {/* PAGE HEADER */}
+        {/* =========================
+            HEADER
+        ========================= */}
         <div className="mb-10">
+
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-[#C8F31D]">
             MY WORKOUTS
           </p>
 
           <h1 className="text-4xl font-extrabold uppercase md:text-5xl">
-            MY PLAN
+            SAVED
           </h1>
 
           <p className="mt-3 text-sm text-white/50">
-            Build and manage your workout plan for today.
+            Your saved workouts for later.
           </p>
+
         </div>
 
         {/* =========================
@@ -177,17 +177,20 @@ export default function PlanPage() {
 
           {/* EXERCISES */}
           <div className="rounded-xl border border-white/10 bg-[#15171D] p-6">
+
             <p className="text-sm text-white/40">
               Exercises
             </p>
 
             <p className="mt-2 text-4xl font-extrabold text-[#C8F31D]">
-              {planWorkouts.length}
+              {savedWorkouts.length}
             </p>
+
           </div>
 
           {/* MINUTES */}
           <div className="rounded-xl border border-white/10 bg-[#15171D] p-6">
+
             <p className="text-sm text-white/40">
               Minutes
             </p>
@@ -195,10 +198,12 @@ export default function PlanPage() {
             <p className="mt-2 text-4xl font-extrabold text-white">
               {totalMinutes}
             </p>
+
           </div>
 
           {/* CALORIES */}
           <div className="rounded-xl border border-white/10 bg-[#15171D] p-6">
+
             <p className="text-sm text-white/40">
               Calories
             </p>
@@ -206,73 +211,50 @@ export default function PlanPage() {
             <p className="mt-2 text-4xl font-extrabold text-white">
               {totalCalories}
             </p>
+
           </div>
 
         </div>
 
         {/* =========================
-            TABS + SORT
+            TABS
         ========================= */}
-        <div className="mb-8 flex flex-col justify-between gap-4 border-b border-white/10 pb-5 sm:flex-row sm:items-center">
+        <div className="mb-8 flex w-fit rounded-xl bg-[#151922] p-1">
 
-          <div className="flex w-fit rounded-xl bg-[#151922] p-1">
+          <Link
+            href="/plan"
+            className="rounded-lg px-6 py-3 text-sm font-bold text-white/60 transition hover:text-white"
+          >
+            Today&apos;s Plan
+          </Link>
 
-            {/* TODAY'S PLAN */}
-            <button
-              className="rounded-lg bg-[#3b4f87] px-6 py-3 text-sm font-bold text-white"
-            >
-              Today&apos;s Plan
-            </button>
+          <Link
+            href="/saved"
+            className="rounded-lg bg-[#3b4f87] px-6 py-3 text-sm font-bold text-white"
+          >
+            Saved
+          </Link>
 
-            {/* SAVED */}
-            <Link
-              href="/saved"
-              className="rounded-lg px-6 py-3 text-sm font-bold text-white/60 transition hover:text-white"
-            >
-              Saved
-            </Link>
-
-          </div>
-
-          {/* SORT */}
-          <div className="flex items-center gap-3">
-
-            <span className="text-xs text-white/40">
-              Sort by
-            </span>
-
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="rounded-lg border border-white/10 bg-[#15171D] px-4 py-2 text-xs text-white outline-none"
-            >
-              <option value="default">Default</option>
-              <option value="duration">Duration</option>
-              <option value="calories">Calories</option>
-              <option value="rating">Rating</option>
-            </select>
-
-          </div>
         </div>
 
         {/* =========================
-            EMPTY PLAN
+            NO SAVED WORKOUT
         ========================= */}
-        {planWorkouts.length === 0 ? (
+        {savedWorkouts.length === 0 ? (
 
           <div className="rounded-2xl border border-white/10 bg-[#15171D] px-6 py-20 text-center">
 
             <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-white/5 text-2xl">
-              +
+              ♡
             </div>
 
             <h2 className="text-xl font-extrabold uppercase">
-              NOTHING HERE YET
+              NO SAVED WORKOUTS
             </h2>
 
             <p className="mx-auto mt-3 max-w-md text-sm text-white/40">
-              Add workouts from the library to build your
-              plan for today.
+              Save workouts from the library and
+              they will appear here.
             </p>
 
             <Link
@@ -287,15 +269,14 @@ export default function PlanPage() {
         ) : (
 
           /* =========================
-             WORKOUT LIST
+             SAVED WORKOUTS
           ========================= */
           <div className="space-y-5">
 
-            {planWorkouts.map((workout) => (
+            {savedWorkouts.map((workout) => (
 
-              <Link
+              <div
                 key={workout.id}
-                href={`/workout/${workout.id}`}
                 className="group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#222630] transition hover:border-[#C8F31D]/50 sm:flex-row"
               >
 
@@ -309,7 +290,7 @@ export default function PlanPage() {
                 {/* CONTENT */}
                 <div className="flex-1 p-5">
 
-                  {/* MUSCLE GROUPS */}
+                  {/* TAGS */}
                   <div className="mb-3 flex flex-wrap gap-2">
 
                     {(Array.isArray(workout.muscleGroups)
@@ -355,9 +336,21 @@ export default function PlanPage() {
 
                   </div>
 
+                  {/* VIEW DETAILS */}
+                  <div className="mt-5">
+
+                    <Link
+                      href={`/saved/${workout.id}`}
+                      className="inline-block rounded-lg bg-[#C8F31D] px-5 py-3 text-xs font-bold uppercase text-black transition hover:bg-[#d6ff3a]"
+                    >
+                      View Details
+                    </Link>
+
+                  </div>
+
                 </div>
 
-              </Link>
+              </div>
 
             ))}
 
@@ -366,6 +359,7 @@ export default function PlanPage() {
         )}
 
       </div>
+
     </main>
   );
 }
