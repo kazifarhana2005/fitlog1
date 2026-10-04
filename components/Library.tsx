@@ -106,7 +106,7 @@ export default function Library() {
                 </span>
 
                 <span>
-                  ★ {workout.rating}
+                  ★    {workout.rating}
                 </span>
               </div>
 
