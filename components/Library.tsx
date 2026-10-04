@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+ import { useEffect, useState } from "react";
 
 type Workout = {
   id: number;
@@ -65,17 +65,17 @@ export default function Library() {
             href={`/workout/${workout.id}`}
             className="overflow-hidden rounded-xl border border-white/10 bg-[#111] transition hover:-translate-y-1 hover:border-[#c8f31d]/50"
           >
-            {/* IMAGE */}
+            
             <img
               src={workout.image}
               alt={workout.name}
               className="h-40 w-full object-cover"
             />
 
-            {/* CARD CONTENT */}
+           
             <div className="p-4">
 
-              {/* TAGS */}
+              
               <div className="flex flex-wrap gap-2">
                 {workout.muscleGroups.map((tag) => (
                   <span
@@ -87,17 +87,17 @@ export default function Library() {
                 ))}
               </div>
 
-              {/* NAME */}
+             
               <h3 className="mt-3 text-sm font-bold uppercase text-white">
                 {workout.name}
               </h3>
 
-              {/* EQUIPMENT */}
+              
               <p className="text-xs text-white/50">
                 {workout.equipment}
               </p>
 
-              {/* INFO */}
+              
               <div className="mt-3 flex gap-4 border-t border-white/10 pt-3 text-xs text-white/60">
                 <span>◷ {workout.duration} min</span>
 
@@ -115,6 +115,6 @@ export default function Library() {
         ))}
 
       </div>
-    </section>
+      </section>
   );
 }
