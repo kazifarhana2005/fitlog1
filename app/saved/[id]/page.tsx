@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 
-type Workout = {
+  type Workout = {
   id: number;
   name: string;
   image: string;
