@@ -22,9 +22,7 @@ export default function SavedPage() {
   const [savedIds, setSavedIds] = useState<number[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // =========================
-  // GET SAVED IDS
-  // =========================
+ 
   useEffect(() => {
     try {
       const saved = localStorage.getItem("fitlog-saved");
@@ -75,9 +73,7 @@ export default function SavedPage() {
     }
   }, []);
 
-  // =========================
-  // GET ALL WORKOUTS FROM API
-  // =========================
+ 
   useEffect(() => {
     async function getWorkouts() {
       try {
@@ -102,36 +98,28 @@ export default function SavedPage() {
     getWorkouts();
   }, []);
 
-  // =========================
-  // GET ONLY SAVED WORKOUTS
-  // =========================
+ 
   const savedWorkouts = useMemo(() => {
     return workouts.filter((workout) =>
       savedIds.includes(Number(workout.id))
     );
   }, [workouts, savedIds]);
 
-  // =========================
-  // TOTAL MINUTES
-  // =========================
+  
   const totalMinutes = savedWorkouts.reduce(
     (total, workout) =>
       total + Number(workout.duration || 0),
     0
   );
 
-  // =========================
-  // TOTAL CALORIES
-  // =========================
+  
   const totalCalories = savedWorkouts.reduce(
     (total, workout) =>
       total + Number(workout.caloriesBurned || 0),
     0
   );
 
-  // =========================
-  // LOADING
-  // =========================
+ 
   if (loading) {
     return (
       <main className="min-h-screen bg-[#0b0b0b] px-6 py-10 text-white sm:px-10">
@@ -151,9 +139,7 @@ export default function SavedPage() {
 
       <div className="mx-auto max-w-6xl">
 
-        {/* =========================
-            HEADER
-        ========================= */}
+        
         <div className="mb-10">
 
           <p className="mb-2 text-xs font-bold uppercase tracking-widest text-[#C8F31D]">
@@ -170,12 +156,10 @@ export default function SavedPage() {
 
         </div>
 
-        {/* =========================
-            STATS
-        ========================= */}
+        
         <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
 
-          {/* EXERCISES */}
+          
           <div className="rounded-xl border border-white/10 bg-[#15171D] p-6">
 
             <p className="text-sm text-white/40">
@@ -188,7 +172,7 @@ export default function SavedPage() {
 
           </div>
 
-          {/* MINUTES */}
+          
           <div className="rounded-xl border border-white/10 bg-[#15171D] p-6">
 
             <p className="text-sm text-white/40">
@@ -201,7 +185,7 @@ export default function SavedPage() {
 
           </div>
 
-          {/* CALORIES */}
+          
           <div className="rounded-xl border border-white/10 bg-[#15171D] p-6">
 
             <p className="text-sm text-white/40">
@@ -216,9 +200,7 @@ export default function SavedPage() {
 
         </div>
 
-        {/* =========================
-            TABS
-        ========================= */}
+       
         <div className="mb-8 flex w-fit rounded-xl bg-[#151922] p-1">
 
           <Link
@@ -237,9 +219,7 @@ export default function SavedPage() {
 
         </div>
 
-        {/* =========================
-            NO SAVED WORKOUT
-        ========================= */}
+        
         {savedWorkouts.length === 0 ? (
 
           <div className="rounded-2xl border border-white/10 bg-[#15171D] px-6 py-20 text-center">
@@ -268,9 +248,7 @@ export default function SavedPage() {
 
         ) : (
 
-          /* =========================
-             SAVED WORKOUTS
-          ========================= */
+          
           <div className="space-y-5">
 
             {savedWorkouts.map((workout) => (
@@ -280,17 +258,17 @@ export default function SavedPage() {
                 className="group flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-[#222630] transition hover:border-[#C8F31D]/50 sm:flex-row"
               >
 
-                {/* IMAGE */}
+                
                 <img
                   src={workout.image}
                   alt={workout.name}
                   className="h-48 w-full object-cover sm:h-40 sm:w-52"
                 />
 
-                {/* CONTENT */}
+                
                 <div className="flex-1 p-5">
 
-                  {/* TAGS */}
+                  
                   <div className="mb-3 flex flex-wrap gap-2">
 
                     {(Array.isArray(workout.muscleGroups)
@@ -309,17 +287,17 @@ export default function SavedPage() {
 
                   </div>
 
-                  {/* NAME */}
+                 
                   <h2 className="text-lg font-extrabold uppercase text-white">
                     {workout.name}
                   </h2>
 
-                  {/* EQUIPMENT */}
+                 
                   <p className="mt-1 text-sm text-white/40">
                     {workout.equipment}
                   </p>
 
-                  {/* STATS */}
+                  
                   <div className="mt-5 flex flex-wrap gap-5 border-t border-white/10 pt-4 text-xs text-white/50">
 
                     <span>
@@ -336,7 +314,7 @@ export default function SavedPage() {
 
                   </div>
 
-                  {/* VIEW DETAILS */}
+                 
                   <div className="mt-5">
 
                     <Link

@@ -1,3 +1,4 @@
+
 "use client";
 
 import {
@@ -19,13 +20,18 @@ type PlanContextType = {
   saveWorkout: (id: number) => void;
   removeSavedWorkout: (id: number) => void;
   isSaved: (id: number) => boolean;
+  toggleSave: (id: number) => void;
 };
 
 const PlanContext = createContext<PlanContextType | undefined>(
   undefined
 );
 
-export function PlanProvider({ children }: { children: ReactNode }) {
+export function PlanProvider({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const [plan, setPlan] = useState<number[]>([]);
   const [saved, setSaved] = useState<number[]>([]);
 
@@ -50,8 +56,6 @@ export function PlanProvider({ children }: { children: ReactNode }) {
     localStorage.setItem("fitlog-saved", JSON.stringify(saved));
   }, [saved]);
 
-  // ================= PLAN =================
-
   const addToPlan = (id: number) => {
     setPlan((current) => {
       if (current.includes(id)) {
@@ -71,8 +75,6 @@ export function PlanProvider({ children }: { children: ReactNode }) {
   const isInPlan = (id: number) => {
     return plan.includes(id);
   };
-
-  // ================= SAVED =================
 
   const saveWorkout = (id: number) => {
     setSaved((current) => {
@@ -94,6 +96,16 @@ export function PlanProvider({ children }: { children: ReactNode }) {
     return saved.includes(id);
   };
 
+  const toggleSave = (id: number) => {
+    setSaved((current) => {
+      if (current.includes(id)) {
+        return current.filter((item) => item !== id);
+      }
+
+      return [...current, id];
+    });
+  };
+
   return (
     <PlanContext.Provider
       value={{
@@ -107,6 +119,7 @@ export function PlanProvider({ children }: { children: ReactNode }) {
         saveWorkout,
         removeSavedWorkout,
         isSaved,
+        toggleSave,
       }}
     >
       {children}
@@ -125,3 +138,4 @@ export function usePlan() {
 
   return context;
 }
+

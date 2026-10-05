@@ -158,8 +158,6 @@
       "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
       "Courier New", monospace;
-    --color-red-400: #ff6568;
-    --color-yellow-400: #fac800;
     --color-gray-400: #99a1af;
     --color-gray-700: #364153;
     --color-black: #000;
@@ -209,8 +207,6 @@
 
   @supports (color: lab(0% 0 0)) {
     :root, :host {
-      --color-red-400: lab(63.7053% 60.7449 31.3109);
-      --color-yellow-400: lab(83.2664% 8.65132 106.895);
       --color-gray-400: lab(65.9269% -.832707 -8.17474);
       --color-gray-700: lab(27.1134% -.956401 -12.3224);
     }
@@ -1517,16 +1513,8 @@
     margin-bottom: calc(var(--spacing) * 3);
   }
 
-  .mb-4 {
-    margin-bottom: calc(var(--spacing) * 4);
-  }
-
   .mb-5 {
     margin-bottom: calc(var(--spacing) * 5);
-  }
-
-  .mb-6 {
-    margin-bottom: calc(var(--spacing) * 6);
   }
 
   .mb-8 {
@@ -1547,10 +1535,6 @@
 
   .ml-3 {
     margin-left: calc(var(--spacing) * 3);
-  }
-
-  .ml-5 {
-    margin-left: calc(var(--spacing) * 5);
   }
 
   .block {
@@ -1591,10 +1575,6 @@
 
   .h-\[220px\] {
     height: 220px;
-  }
-
-  .h-\[420px\] {
-    height: 420px;
   }
 
   .h-\[520px\] {
@@ -1741,10 +1721,6 @@
     gap: calc(var(--spacing) * 8);
   }
 
-  .gap-10 {
-    gap: calc(var(--spacing) * 10);
-  }
-
   :where(.space-y-2 > :not(:last-child)) {
     --tw-space-y-reverse: 0;
     margin-block-start: calc(calc(var(--spacing) * 2) * var(--tw-space-y-reverse));
@@ -1842,10 +1818,6 @@
     background-color: #0b0b0b;
   }
 
-  .bg-\[\#0b1220\] {
-    background-color: #0b1220;
-  }
-
   .bg-\[\#1E1E1E\] {
     background-color: #1e1e1e;
   }
@@ -1856,10 +1828,6 @@
 
   .bg-\[\#111\] {
     background-color: #111;
-  }
-
-  .bg-\[\#151e2d\] {
-    background-color: #151e2d;
   }
 
   .bg-\[\#15171D\] {
@@ -1975,10 +1943,6 @@
     padding-block: var(--spacing);
   }
 
-  .py-2 {
-    padding-block: calc(var(--spacing) * 2);
-  }
-
   .py-3 {
     padding-block: calc(var(--spacing) * 3);
   }
@@ -1987,20 +1951,12 @@
     padding-block: calc(var(--spacing) * 4);
   }
 
-  .py-6 {
-    padding-block: calc(var(--spacing) * 6);
-  }
-
   .py-8 {
     padding-block: calc(var(--spacing) * 8);
   }
 
   .py-10 {
     padding-block: calc(var(--spacing) * 10);
-  }
-
-  .py-12 {
-    padding-block: calc(var(--spacing) * 12);
   }
 
   .py-20 {
@@ -2013,14 +1969,6 @@
 
   .pt-4 {
     padding-top: calc(var(--spacing) * 4);
-  }
-
-  .pb-5 {
-    padding-bottom: calc(var(--spacing) * 5);
-  }
-
-  .pb-16 {
-    padding-bottom: calc(var(--spacing) * 16);
   }
 
   .text-center {
@@ -2186,10 +2134,6 @@
     }
   }
 
-  .text-yellow-400 {
-    color: var(--color-yellow-400);
-  }
-
   .uppercase {
     text-transform: uppercase;
   }
@@ -2211,19 +2155,10 @@
     transition-duration: var(--tw-duration, var(--default-transition-duration));
   }
 
-  .outline-none {
-    --tw-outline-style: none;
-    outline-style: none;
-  }
-
   @media (hover: hover) {
     .hover\:-translate-y-1:hover {
       --tw-translate-y: calc(var(--spacing) * -1);
       translate: var(--tw-translate-x) var(--tw-translate-y);
-    }
-
-    .hover\:border-\[\#C8F31D\]:hover {
-      border-color: #c8f31d;
     }
 
     .hover\:border-\[\#C8F31D\]\/50:hover, .hover\:border-\[\#c8f31d\]\/50:hover {
@@ -2245,12 +2180,8 @@
       }
     }
 
-    .hover\:text-\[\#C8F31D\]:hover, .hover\:text-\[\#c8f31d\]:hover {
+    .hover\:text-\[\#c8f31d\]:hover {
       color: #c8f31d;
-    }
-
-    .hover\:text-red-400:hover {
-      color: var(--color-red-400);
     }
 
     .hover\:text-white:hover {
@@ -2282,10 +2213,6 @@
       display: flex;
     }
 
-    .sm\:h-32 {
-      height: calc(var(--spacing) * 32);
-    }
-
     .sm\:h-40 {
       height: calc(var(--spacing) * 40);
     }
@@ -2304,10 +2231,6 @@
 
     .sm\:flex-row {
       flex-direction: row;
-    }
-
-    .sm\:items-center {
-      align-items: center;
     }
 
     .sm\:p-8 {
